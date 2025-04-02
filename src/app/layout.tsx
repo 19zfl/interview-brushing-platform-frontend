@@ -3,11 +3,10 @@
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import BasicLayout from "@/layouts/BasicLayout";
-import React, { useEffect, useCallback } from "react";
-import store, {AppDispatch} from "@/store";
-import {Provider, useDispatch} from "react-redux";
-import {getLoginUserUsingGet} from "@/api/userController";
-import {setLoginUser} from "@/store/loginUser";
+import React, { useCallback, useEffect } from "react";
+import store, { AppDispatch } from "@/store";
+import { Provider, useDispatch } from "react-redux";
+import { getLoginUserUsingGet } from "@/api/userController";
 
 /**
  * 执行初始化逻辑的布局（多封装一层）
@@ -22,13 +21,12 @@ const InitLayout: React.FC<
   /**
    * 全局初始化函数，有全局单次调用的代码，都可以写到这里
    */
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
   const doInitLoginUser = useCallback(async () => {
-    const res = await getLoginUserUsingGet()
+    const res = await getLoginUserUsingGet();
     if (res.data) {
       // 更新登录用户信息
     } else {
-
     }
   }, []);
 
