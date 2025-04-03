@@ -6,19 +6,21 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
-import { Dropdown, Input } from "antd";
+import { Dropdown, Input, message } from "antd";
 import React from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooter";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import getAccessibleMenus from "@/access/menuAccess";
+import { userLogoutUsingPost } from "@/api/userController";
+import { DEFAULT_USER } from "@/constants/user";
 
 import menus from "../../../config/menu";
-
 import "./index.css";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import getAccessibleMenus from "@/access/menuAccess";
+import { setLoginUser } from "@/store/loginUser";
 
 const SearchInput = () => {
   return (
@@ -55,6 +57,24 @@ interface Props {
 export default function BasicLayout({ children }: Props) {
   const pathname = usePathname();
   const loginUser = useSelector((state: RootState) => state.loginUser);
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  // 退出登录
+  const doUserLogout = async () => {
+    try {
+      await userLogoutUsingPost();
+      // 提示信息
+      message.success("已退出登录");
+      // @ts-ignore
+      // 登录用户状态清空
+      dispatch(setLoginUser(DEFAULT_USER));
+      // 跳转到登录页
+      router.push("/user/login");
+    } catch (e) {
+      // @ts-ignore
+      message.error("操作失败：" + e.message);
+    }
+  };
   return (
     <div
       id="basicLayout"
@@ -84,6 +104,17 @@ export default function BasicLayout({ children }: Props) {
           size: "small",
           title: loginUser.userName || "请登录",
           render: (props, dom) => {
+            if (!loginUser.id) {
+              return (
+                <div
+                  onClick={() => {
+                    router.push("/user/login");
+                  }}
+                >
+                  {dom}
+                </div>
+              );
+            }
             return (
               <Dropdown
                 menu={{
@@ -94,6 +125,12 @@ export default function BasicLayout({ children }: Props) {
                       label: "退出登录",
                     },
                   ],
+                  onClick: (event: { key: React.Key }) => {
+                    const { key } = event;
+                    if (key === "logout") {
+                      doUserLogout();
+                    }
+                  },
                 }}
               >
                 {dom}

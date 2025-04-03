@@ -8,6 +8,7 @@ import store, { AppDispatch } from "@/store";
 import { Provider, useDispatch } from "react-redux";
 import { getLoginUserUsingGet } from "@/api/userController";
 import AccessLayout from "@/access/accessLayout";
+import {setLoginUser} from "@/store/loginUser";
 
 /**
  * 初始化布局（多封装一层，使得能调用 useDispatch）
@@ -26,6 +27,9 @@ const InitLayout: React.FC<
     // 获取用户信息
     const res = await getLoginUserUsingGet();
     if (res.data) {
+      // 保存登录用户信息
+      // @ts-ignore
+      dispatch(setLoginUser(res.data));
     } else {
       // 测试代码，实际可删除
       // setTimeout(() => {
