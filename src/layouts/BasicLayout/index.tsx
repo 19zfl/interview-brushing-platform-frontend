@@ -41,7 +41,7 @@ const SearchInput = () => {
           marginInlineEnd: 12,
         }}
         prefix={<SearchOutlined />}
-        placeholder="搜索题目"
+        placeholder="搜索"
         variant="borderless"
       />
     </div>
