@@ -15,9 +15,10 @@ import GlobalFooter from "@/components/GlobalFooter";
 
 import menus from "../../../config/menu";
 
-import './index.css'
-import {useSelector} from "react-redux";
-import {RootState} from "@/store";
+import "./index.css";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import getAccessibleMenus from "@/access/menuAccess";
 
 const SearchInput = () => {
   return (
@@ -77,7 +78,9 @@ export default function BasicLayout({ children }: Props) {
           pathname,
         }}
         avatarProps={{
-          src: loginUser.userAvatar || "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+          src:
+            loginUser.userAvatar ||
+            "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
           size: "small",
           title: loginUser.userName || "请登录",
           render: (props, dom) => {
@@ -122,7 +125,7 @@ export default function BasicLayout({ children }: Props) {
         onMenuHeaderClick={(e) => console.log(e)}
         // 定义菜单
         menuDataRender={() => {
-          return menus;
+          return getAccessibleMenus(loginUser, menus);
         }}
         // 定义菜单项如何渲染
         menuItemRender={(item, dom) => (
