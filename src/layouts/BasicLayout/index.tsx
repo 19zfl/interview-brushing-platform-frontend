@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  GithubFilled,
-  LogoutOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { GithubFilled, LogoutOutlined } from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
-import { Dropdown, Input, message } from "antd";
+import { Dropdown, message } from "antd";
 import React from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,34 +17,7 @@ import { DEFAULT_USER } from "@/constants/user";
 import menus from "../../../config/menu";
 import "./index.css";
 import { setLoginUser } from "@/store/loginUser";
-
-const SearchInput = () => {
-  return (
-    <div
-      key="SearchOutlined"
-      aria-hidden
-      style={{
-        display: "flex",
-        alignItems: "center",
-        marginInlineEnd: 24,
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-      }}
-    >
-      <Input
-        style={{
-          borderRadius: 4,
-          marginInlineEnd: 12,
-        }}
-        prefix={<SearchOutlined />}
-        placeholder="搜索"
-        variant="borderless"
-      />
-    </div>
-  );
-};
+import SearchInput from "@/layouts/BasicLayout/components/SearchInput";
 
 interface Props {
   children: React.ReactNode;
@@ -140,6 +109,7 @@ export default function BasicLayout({ children }: Props) {
         }}
         actionsRender={(props) => {
           if (props.isMobile) return [];
+          if (pathname === "/questions") return [];
           return [
             <SearchInput key="search" />,
             <a key="github" href="https://github.com/19zfl" target="_blank">
