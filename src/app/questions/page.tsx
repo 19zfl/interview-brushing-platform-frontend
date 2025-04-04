@@ -1,9 +1,43 @@
-import './index.css'
+"use server";
+
+import Title from "antd/es/typography/Title";
+import { listQuestionVoByPageUsingPost } from "@/api/questionController";
+import { message } from "antd";
+import "./index.css";
+import QuestionTable from "@/components/QuestionTable";
 
 /**
- * 题目
+ * 题目列表页面
  * @constructor
  */
-export default function QuestionPage() {
-  return <div id="questionPage">题目</div>;
+// @ts-ignore
+export default async function QuestionsPage({ searchParams }) {
+  let questionList = [];
+  let total = 0;
+  // 获取url中查询参数
+  const {q:searchText} = searchParams;
+
+  try {
+    const questionBankRes = await listQuestionVoByPageUsingPost({
+      title: searchText,
+      pageSize: 12,
+      sortField: "createTime",
+      sortOrder: "descend",
+    });
+    // @ts-ignore
+    questionList = questionBankRes.data.records ?? [];
+    // @ts-ignore
+    total = questionBankRes.data.total;
+  } catch (e) {
+    // @ts-ignore
+    message.error("获取题目列表失败，" + e.message);
+  }
+
+  return (
+    <div id="questionsPage" className="max-width-content">
+      <Title level={3}>题目大全</Title>
+      {/*@ts-ignore*/}
+      <QuestionTable defaultQuestionList={questionList} defaultTotal={total} defaultSearchParams={{title: searchText}} />
+    </div>
+  );
 }
