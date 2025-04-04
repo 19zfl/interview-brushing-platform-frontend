@@ -13,7 +13,6 @@ import CreateModal from "@/app/admin/question/components/CreateModal";
 import UpdateModal from "@/app/admin/question/components/UpdateModal";
 import TagList from "@/components/TagList";
 import MdEditor from "@/components/MdEditor";
-import { FormInstance } from "antd/lib";
 
 /**
  * 题目管理页面
@@ -89,10 +88,10 @@ const QuestionAdminPage: React.FC = () => {
       hideInSearch: true,
       width: 640,
       renderFormItem: (
-          item,
-          // @ts-ignore
-          { fieldProps },
-          form,
+        item,
+        // @ts-ignore
+        { fieldProps },
+        form,
       ) => {
         return <MdEditor {...fieldProps} />;
       },
