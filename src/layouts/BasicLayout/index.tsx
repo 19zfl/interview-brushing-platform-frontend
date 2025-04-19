@@ -1,6 +1,6 @@
 "use client";
 
-import { GithubFilled, LogoutOutlined } from "@ant-design/icons";
+import { GithubFilled, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
 import { Dropdown, message } from "antd";
 import React from "react";
@@ -44,6 +44,14 @@ export default function BasicLayout({ children }: Props) {
       message.error("操作失败：" + e.message);
     }
   };
+  // 获取当前用户登录状态
+  const loginState = loginUser.userRole;
+  // 未登录无法进入用户中心
+  if (pathname === "/user/center") {
+    if (loginState === "not_login") {
+      router.push("/user/login");
+    }
+  }
   return (
     <div
       id="basicLayout"
@@ -89,6 +97,11 @@ export default function BasicLayout({ children }: Props) {
                 menu={{
                   items: [
                     {
+                      key: "userCenter",
+                      icon: <UserOutlined />,
+                      label: "个人中心",
+                    },
+                    {
                       key: "logout",
                       icon: <LogoutOutlined />,
                       label: "退出登录",
@@ -96,6 +109,9 @@ export default function BasicLayout({ children }: Props) {
                   ],
                   onClick: (event: { key: React.Key }) => {
                     const { key } = event;
+                    if (key === "userCenter") {
+                      router.push("/user/center");
+                    }
                     if (key === "logout") {
                       doUserLogout();
                     }
