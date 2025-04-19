@@ -166,6 +166,9 @@ const QuestionAdminPage: React.FC = () => {
         headerTitle={"查询表格"}
         actionRef={actionRef}
         rowKey="key"
+        scroll={{
+          x: true,
+        }}
         search={{
           labelWidth: 120,
         }}
