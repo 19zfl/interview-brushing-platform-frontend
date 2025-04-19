@@ -1,9 +1,10 @@
 "use client";
 
-import {ActionType, ProColumns, ProTable} from "@ant-design/pro-components";
-import {useRef, useState} from "react";
+import { ActionType, ProColumns, ProTable } from "@ant-design/pro-components";
+import { useRef, useState } from "react";
 import TagList from "@/components/TagList";
-import {listQuestionVoByPageUsingPost} from "@/api/questionController";
+import Link from "next/link";
+import { searchQuestionVoByPageUsingPost } from "@/api/questionController";
 
 interface Props {
   // 默认值：展示服务端渲染数据
@@ -19,15 +20,13 @@ interface Props {
  */
 const QuestionTable: React.FC = (props: Props) => {
   const actionRef = useRef<ActionType>();
-  const {defaultQuestionList, defaultTotal, defaultSearchParams={}} = props;
+  const { defaultQuestionList, defaultTotal, defaultSearchParams = {} } = props;
   // 题目列表
   const [questionList, setQuestionList] = useState<API.QuestionVO[]>(
-      defaultQuestionList || [],
+    defaultQuestionList || [],
   );
   // 题目总数
-  const [total, setTotal] = useState<number>(
-      defaultTotal || 0,
-  )
+  const [total, setTotal] = useState<number>(defaultTotal || 0);
   // 初始化加载
   const [init, setInit] = useState<boolean>(true);
   /**
@@ -35,9 +34,19 @@ const QuestionTable: React.FC = (props: Props) => {
    */
   const columns: ProColumns<API.Question>[] = [
     {
+      title: "搜索",
+      dataIndex: "searchText",
+      valueType: "text",
+      hideInTable: true,
+    },
+    {
       title: "标题",
       dataIndex: "title",
       valueType: "text",
+      hideInSearch: true,
+      render: (_, record) => {
+        return <Link href={`/question/${record.id}`}>{record.title}</Link>;
+      },
     },
     {
       title: "标签",
@@ -61,7 +70,7 @@ const QuestionTable: React.FC = (props: Props) => {
           labelWidth: "auto",
         }}
         form={{
-          initialValues: defaultSearchParams
+          initialValues: defaultSearchParams,
         }}
         dataSource={questionList}
         pagination={{
@@ -82,7 +91,7 @@ const QuestionTable: React.FC = (props: Props) => {
           const sortOrder = sort?.[sortField] || "descend";
 
           // @ts-ignore
-          const { data, code } = await listQuestionVoByPageUsingPost({
+          const { data, code } = await searchQuestionVoByPageUsingPost({
             ...params,
             sortField,
             sortOrder,
